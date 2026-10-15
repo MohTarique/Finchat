@@ -6,7 +6,7 @@ A Streamlit-based financial document assistant designed to help users explore fi
 
 ## Screenshot
 
-![FinChat application screenshot](screenshots/finchat-screenshot.png)
+![FinChat application screenshot](https://github.com/MohTarique/Finchat/blob/83cc8cce623652a43951228abb4044cc5b9b36ad/Screenshot%20(49).png)
 
 ## Features
 
