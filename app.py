@@ -1,11 +1,11 @@
 """
-Financial RAG Chatbot
+FinChat
 =====================
 A Retrieval-Augmented Generation chatbot for financial document Q&A.
 Built with LangChain, OpenAI GPT-4, ChromaDB, and Streamlit.
 
-Author: Satya Sai Prakash Kantamani
-GitHub: https://github.com/kantamaniprakash
+Author: Moh Tarique Siddiqui
+GitHub: https://github.com/
 """
 
 import os
@@ -26,7 +26,7 @@ from chunking import chunk_documents
 
 # ─── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Financial RAG Chatbot",
+    page_title="FinChat",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -208,7 +208,7 @@ def format_sources(source_docs: list) -> str:
 
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🤖 Financial RAG Chatbot")
+    st.markdown("## 🤖 FinChat")
     st.markdown("*Ask questions about your financial documents*")
     st.divider()
 
@@ -269,7 +269,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("""
-    **Built by [Satya Sai Prakash Kantamani](https://github.com/kantamaniprakash)**
+    **Built by [Moh Tarique Siddiqui](https://github.com/)**
 
     Stack: LangChain · OpenAI · ChromaDB · Streamlit
     """)

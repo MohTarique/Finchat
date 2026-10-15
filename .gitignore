@@ -1,39 +1,13 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-*.pyc
 
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# Virtual environments
 .venv/
 venv/
-env/
-ENV/
-
-# Environment variables / secrets
+__pycache__/
+*.py[cod]
 .env
 .env.*
 !.env.example
-
-# Vector store (ChromaDB persistent local store)
-chroma_db/
-
-# Evaluation output
-eval_results.json
-
-# IDE / OS
-.idea/
-.vscode/
+.streamlit/secrets.toml
 .DS_Store
-Thumbs.db
 
-# Test / coverage artifacts
-.pytest_cache/
-.coverage
-htmlcov/
+
+chroma_db/

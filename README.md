@@ -1,277 +1,206 @@
-# Financial RAG Chatbot
+# FinChat — Financial Document Assistant
 
-> A Retrieval-Augmented Generation (RAG) chatbot for financial document analysis — powered by LangChain, OpenAI GPT-4, ChromaDB, and Streamlit.
+**FinChat** is an AI-powered financial document assistant built with Streamlit. Upload financial PDFs, process their contents, and ask questions in natural language to find information in reports more easily.
 
-[![Live Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20Demo-Hugging%20Face%20Spaces-yellow)](https://huggingface.co/spaces/Prakashkantamani/financial-rag-chatbot)
-[![CI](https://github.com/Kantamaniprakash/financial-rag-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/Kantamaniprakash/financial-rag-chatbot/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
-![LangChain](https://img.shields.io/badge/LangChain-0.3+-green?style=flat-square)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-orange?style=flat-square)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.58+-red?style=flat-square)
-
-**[▶ Try the live demo](https://huggingface.co/spaces/Prakashkantamani/financial-rag-chatbot)** — upload a financial PDF and ask questions. Bring your own OpenAI API key (entered in the sidebar, used only for your session, never stored).
+> Built by **Moh Tarique Siddiqui**
 
 ---
-
-![Financial RAG Chatbot — dark-themed Streamlit chat UI with sidebar for OpenAI API key entry and PDF upload](docs/screenshot.png)
-*The app on first launch: enter an OpenAI API key in the sidebar, upload financial PDFs, and start asking questions.*
 
 ## Overview
 
-Financial documents (10-Ks, earnings call transcripts, analyst reports) are dense and time-consuming to parse. This app lets you **upload any PDF and ask questions in natural language** — getting precise, source-cited answers in seconds.
+Financial reports can be long and difficult to search manually. FinChat provides a chat-style interface for exploring uploaded financial documents. It uses a retrieval-augmented generation (RAG) workflow to find relevant document content and help generate answers grounded in the uploaded material.
 
-### Key Features
-- **Multi-document ingestion** — upload multiple PDFs simultaneously
-- **Semantic vector search** — ChromaDB indexes document chunks with MMR retrieval for diverse, relevant results
-- **Conversational memory** — maintains context across multiple questions (sliding window of last 5 turns)
-- **Source citations** — every answer shows which document and page it came from
-- **Financial-domain system prompt** — tuned for precise financial data extraction (numbers, dates, ratios)
-- **Dark-themed UI** — clean chat interface with styled message bubbles and source chips
+## Features
 
----
+- **PDF upload** — upload financial documents through the sidebar.
+- **Natural-language Q&A** — ask questions about the uploaded documents.
+- **Document retrieval** — find relevant passages for a question.
+- **Source-aware answers** — the project is designed to provide references to document pages where supported by the source and processing pipeline.
+- **Conversation flow** — ask follow-up questions while exploring a report.
+- **Local web interface** — run the Streamlit app on your own computer.
 
-## Architecture
+## Technology Stack
 
-```
-User Query
-    │
-    ▼
-Query Embedding (OpenAI text-embedding-3-small)
-    │
-    ▼
-ChromaDB Vector Store ──▶ Top-5 Relevant Chunks (MMR, fetch_k=15)
-    │
-    ▼
-LangChain ConversationalRetrievalChain
-    │
-    ▼
-GPT-4o-mini (with retrieved context + conversation history)
-    │
-    ▼
-Answer + Source Citations (file name + page number)
-```
+- **Python** — application runtime
+- **Streamlit** — web interface
+- **OpenAI API** — language-model functionality
+- **LangChain / LangChain Community** — document and retrieval workflow
+- **ChromaDB** — vector storage and similarity search
 
----
-
-## Tech Stack
-
-| Component        | Technology                               |
-|-----------------|------------------------------------------|
-| LLM             | OpenAI GPT-4o-mini (swappable to GPT-4)  |
-| Embeddings      | OpenAI text-embedding-3-small            |
-| Vector Store    | ChromaDB (persistent local storage)      |
-| Retrieval       | MMR (Maximal Marginal Relevance)         |
-| Orchestration   | LangChain ConversationalRetrievalChain   |
-| PDF Parsing     | PyMuPDF (fitz) — reads from bytes for cross-platform compatibility |
-| Text Splitting  | Sentence-aware token-budget chunker (256 cl100k tokens, benchmark-tuned) |
-| Memory          | ConversationBufferWindowMemory (k=5)     |
-| UI              | Streamlit with custom dark theme CSS     |
-
----
-
-## Getting Started
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/Kantamaniprakash/financial-rag-chatbot.git
-cd financial-rag-chatbot
-```
-
-### 2. Install dependencies
-
-With [uv](https://docs.astral.sh/uv/) (recommended — uses the committed lockfile):
-```bash
-uv sync
-```
-
-Or with pip:
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the app
-```bash
-streamlit run app.py
-```
-
-### 4. Enter your OpenAI API key in the sidebar and upload documents
-
----
-
-## Usage
-
-1. Open `http://localhost:8501` in your browser
-2. Enter your OpenAI API key in the sidebar
-3. Upload one or more financial PDF documents
-4. Click **"Process Documents"** — the app chunks, embeds, and indexes them in ChromaDB
-5. Type your question in the chat input
-6. Get answers with source citations (file name + page number)
-
-### Example Questions
-- *"What was Apple's revenue growth YoY in Q3?"*
-- *"Summarize the key risk factors mentioned in this 10-K"*
-- *"What did the CEO say about AI strategy in the earnings call?"*
-- *"Compare the gross margins between the two uploaded reports"*
-- *"What are the major capital expenditure items mentioned?"*
-
----
+Exact package versions are defined in `requirements.txt`.
 
 ## Project Structure
 
-```
-financial-rag-chatbot/
-├── app.py              # Main Streamlit app (UI + RAG pipeline + PDF loader)
-├── chunking.py         # Sentence-aware token-budget chunker (benchmark-tuned defaults)
-├── eval_harness.py     # Retrieval + generation evaluation harness
-├── tests/
-│   ├── test_smoke.py       # CI smoke tests (ast-parse sources, check key files)
-│   └── test_chunking.py    # Chunker invariant tests (no API key needed)
-├── docs/
-│   └── screenshot.png  # UI screenshot embedded in this README
+Your repository may contain additional files; a typical layout looks like this:
+
+```text
+finchat/
+├── app.py                 # Streamlit application entry point
+├── requirements.txt       # Python dependencies
 ├── .streamlit/
-│   └── config.toml     # Streamlit server config (XSRF/CORS enabled)
-├── .github/
-│   ├── workflows/ci.yml    # CI: uv-locked install, lint + tests on Python 3.10–3.12
-│   └── dependabot.yml      # Weekly pip + GitHub Actions updates
-├── .env.example        # Template for required environment variables
-├── pyproject.toml      # Project metadata + dependencies (PEP 621)
-├── uv.lock             # Locked dependency resolution (uv)
-├── requirements.txt    # Pip-compatible dependency pins
-├── LICENSE             # MIT
-└── README.md
+│   └── config.toml        # Optional Streamlit theme configuration
+├── .venv/                 # Local virtual environment (do not commit)
+├── .env                   # Optional local secrets file (do not commit)
+└── README.md              # Project documentation
 ```
 
----
+## Requirements
 
-## How It Works
+- Windows 10/11, macOS, or Linux
+- Python version compatible with the packages in `requirements.txt` (Python 3.11 is a reasonable starting point for this project)
+- An OpenAI API key with an active API billing balance
+- Internet access for API requests and package installation
 
-1. **PDF Ingestion** — PyMuPDF reads uploaded PDFs from bytes (no temp files needed), extracts text page-by-page with metadata (source file, page number)
-2. **Chunking** — a sentence-aware chunker (`chunking.py`) packs whole sentences into chunks of at most 256 tokens, measured with the embedding model's own tokenizer (cl100k_base), so chunk boundaries never cut through a sentence mid-thought (see [Chunking configuration](#chunking-configuration-and-why) for why)
-3. **Embedding** — OpenAI `text-embedding-3-small` converts chunks into dense vectors
-4. **Indexing** — ChromaDB stores vectors in a persistent local database for fast similarity search
-5. **Retrieval** — MMR retrieval fetches top-5 most relevant and diverse chunks from a candidate pool of 15
-6. **Generation** — GPT-4o-mini generates answers grounded in retrieved context, with a financial-domain system prompt enforcing citation and precision
-7. **Memory** — Sliding window keeps last 5 conversation turns for multi-turn follow-up questions
+> **API billing:** ChatGPT subscriptions and OpenAI API billing are separate. API requests may incur charges. Check your API usage and billing limits before processing documents.
 
----
+## Setup on Windows
 
-## Chunking configuration (and why)
+These instructions assume your project folder is named `finchat` and is located at `C:\Users\<your-user>\finchat`.
 
-The chunking defaults are not folklore — they come from
-[rag-chunking-bench](https://github.com/kantamaniprakash/genai-lab/tree/main/rag-chunking-bench),
-my controlled benchmark of chunking strategies that compares chunkers under a
-**matched retrieved-token budget** (so bigger chunks don't win just by handing
-the LLM more text) with paired bootstrap confidence intervals.
+### 1. Open PowerShell in the project folder
 
-**Defaults: sentence-packed chunks of ≤ 256 tokens, no overlap, tokens counted
-with cl100k_base (the embedding model's own tokenizer).**
-
-What the benchmark measured that motivates each choice:
-
-- **Sentence packing over character/window splitting.** Chunkers that only cut
-  at sentence boundaries beat fixed token windows at every matched size on the
-  benchmark's short-answer dataset, and at the size this app uses the gap was
-  largest on long-reference corpora (including a corpus of financial
-  documents): **+0.083 SpanRecall** at 256 tokens and a 400-token retrieval
-  budget — cutting mid-sentence cuts through exactly the evidence the
-  retriever needs.
-- **256 tokens, not smaller.** This app retrieves k=5 chunks of ≤ 256 tokens
-  (≈ 1,000–1,300 tokens of context), which is the benchmark's generous-budget
-  regime. There, on corpora whose answers span whole sentences or paragraphs
-  (like financial filings), sentence-256 was the **top configuration of all 12
-  tested** (SpanRecall 0.845 at an 800-token budget, 0.938 at 1,600), and the
-  popular "smaller chunks are always better" rule inverted: 64-token chunks
-  scored significantly *worse* than 256 (−0.040 [−0.063, −0.018] at B=1,600).
-  Small chunks only win when answers are short spans and budgets are tight.
-- **No overlap.** At 256-token sentence packing, overlap of 1–2 sentences
-  moved recall by a statistically insignificant −0.014 to +0.010 while
-  inflating the index by 21–44% more chunks. Overlap earns its cost only for
-  *fixed windows* (where it repairs broken boundaries) or small sentence
-  chunks — sentence packing at this size already gets that benefit for free.
-
-**Caveats, honestly stated:** the benchmark measured retrieval (span recall of
-gold evidence), not end-to-end answer quality; its budgets are in regex word
-tokens while this app budgets cl100k BPE tokens (~same regime, not identical
-units); and its retrievers were BM25/TF-IDF/LSA/MiniLM rather than
-`text-embedding-3-small`. The findings transferred across all four retriever
-families whose encoders read the full chunk — which an 8K-context OpenAI
-embedder does — but I have not yet re-run the grid with OpenAI embeddings.
-
----
-
-## Results
-
-**What is measured.** The repo ships an evaluation harness (`eval_harness.py`, see
-[Evaluation](#evaluation)) that scores the retriever and the generator as separate components
-against a committed fixture corpus (10 synthetic financial passages) and a labeled eval set
-(10 questions with known-relevant chunks and expected facts):
-
-| Component | Metric | Method |
-|-----------|--------|--------|
-| Retriever | Hit Rate@k | fraction of questions with a relevant chunk in the top-k |
-| Retriever | MRR@k | mean reciprocal rank of the first relevant chunk |
-| Generator | Faithfulness | LLM-judge pass/fail: is the answer grounded in retrieved context? |
-| Generator | Answer relevancy | LLM-judge 1–5 score for how directly the answer addresses the question |
-| Generator | Keyword coverage | sanity check that expected facts appear in the answer |
-
-**What is not claimed.** No benchmark numbers are published in this repo: running the harness
-requires an OpenAI API key, and its output (`eval_results.json`) is deliberately not committed
-so stale numbers never drift out of sync with the code. Qualitative observations from
-development — sub-second retrieval on ~50-page PDFs, ChromaDB comfortably indexing 100+ page
-collections on a single laptop — are anecdotal, not benchmarked.
-
-### Limitations
-
-- **Synthetic eval corpus** — the harness's 10-passage fixture set is small and synthetic; scores on it do not guarantee performance on real 10-Ks or earnings transcripts.
-- **LLM-judge subjectivity** — faithfulness and relevancy are scored by an LLM judge, which carries its own biases and run-to-run variance.
-- **No hallucination guarantee** — the system prompt enforces grounding and citation, but LLM outputs can still contain unsupported statements; citations identify retrieved chunks, not independently verified facts.
-- **API cost and dependency** — every indexed chunk and every question incurs OpenAI embedding/completion calls; there is no local-model fallback.
-- **Single-machine scale, text PDFs only** — ChromaDB runs embedded with local persistence (no auth, no multi-user serving), and PyMuPDF extracts embedded text only, so scanned/image-based PDFs need OCR that is not included.
-
----
-
-## Evaluation
-
-`eval_harness.py` evaluates the retriever and the generator as separate
-components, which is the current best practice for debugging RAG systems —
-it tells you whether a bad answer came from the retriever surfacing the
-wrong chunks or the LLM misusing good ones.
-
-It ships with its own fixture corpus (10 synthetic financial passages) and
-a labeled eval set (10 questions with known-relevant chunks and expected
-facts), so it runs standalone against a fresh in-memory Chroma store —
-no uploaded PDFs required.
-
-**Retrieval metrics**
-- **Hit Rate@k** — fraction of questions where a relevant chunk is in the top-k results
-- **MRR@k** — mean reciprocal rank of the first relevant chunk
-
-**Generation metrics**
-- **Faithfulness** — LLM-judge pass/fail on whether the answer is grounded in the retrieved context
-- **Answer relevancy** — LLM-judge 1-5 score for how directly the answer addresses the question
-- **Keyword coverage** — sanity check that expected facts appear in the answer
-
-```bash
-export OPENAI_API_KEY=sk-...
-python eval_harness.py            # k=5 by default
-python eval_harness.py --k 3 --output results.json
+```powershell
+cd "$HOME\finchat"
 ```
 
-This prints a summary report plus a per-question pass/fail breakdown, and
-writes full results (including every generated answer and judge reasoning)
-to `eval_results.json`.
+### 2. Create a virtual environment
 
-## Future Improvements
-- [ ] Add support for Excel/CSV financial data ingestion
-- [ ] Implement reranking with Cohere Rerank API for improved precision
-- [ ] Add financial-specific analysis templates (DCF, ratio analysis, peer comparison)
-- [ ] Support for EDGAR API direct 10-K/10-Q downloads
-- [ ] Deploy to Streamlit Cloud or AWS EC2
+If Python 3.11 is installed:
+
+```powershell
+py -3.11 -m venv .venv
+```
+
+If you already have a working `.venv`, you can keep using it rather than creating it again.
+
+### 3. Install dependencies
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+If dependency installation fails, check the Python version and the specific error before changing package versions.
+
+### 4. Start FinChat
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+Streamlit prints a **Local URL**, usually `http://localhost:8501`. Open that URL in your browser. If the port is already in use, Streamlit may select another port, such as `8502`.
+
+Keep the terminal open while using the app. Stop the server with `Ctrl+C`.
+
+## Optional: Start with One Double-Click
+
+To make launching easier on Windows, create a file named `start.bat` in the project folder with the following contents:
+
+```bat
+@echo off
+cd /d "%USERPROFILE%\finchat"
+echo Starting FinChat...
+.\.venv\Scripts\python.exe -m streamlit run app.py
+pause
+```
+
+Save it as **`start.bat`**, choosing **All files** in Notepad's “Save as type” field so it does not become `start.bat.txt`. Double-click the file to launch FinChat.
+
+## Configure Your API Key
+
+1. Open FinChat in your browser.
+2. Enter your OpenAI API key in the **OpenAI API Key** field in the sidebar, if prompted.
+3. Follow the app's instructions to apply the key.
+
+Create and manage API keys through the official [OpenAI API keys page](https://platform.openai.com/api-keys).
+
+### Keep secrets safe
+
+- Never commit API keys to GitHub.
+- Do not paste API keys into screenshots, issue reports, or public messages.
+- If you store secrets in a `.env` file, ensure `.env` is listed in `.gitignore`.
+- If a key is exposed, revoke it and create a replacement.
+
+## How to Use
+
+1. Start FinChat and open the Local URL shown by Streamlit.
+2. Add your API key in the sidebar if required.
+3. Use **Upload Documents** to select one or more supported PDF files.
+4. Click **Process Documents** and wait for processing to finish.
+5. Ask questions about the uploaded reports.
+
+Example questions:
+
+- What was the company's total revenue?
+- Summarize the key financial risks discussed in the report.
+- What does the report say about operating expenses?
+- Compare the performance of the business segments.
+- Which pages discuss liabilities or cash flow?
+
+Answers depend on the content and quality of the uploaded documents. Verify important figures against the original report before relying on them.
+
+## Troubleshooting
+
+### `git` or `python` is not recognized
+
+Install Git or Python and reopen PowerShell. On Windows, `py --list` shows installed Python versions.
+
+### Dependency installation fails
+
+Confirm that the virtual environment uses a Python version compatible with the requirements. Review the full error output before upgrading or downgrading packages.
+
+### The browser does not open automatically
+
+Use the **Local URL** printed in the terminal and open it manually in your browser. Keep the terminal running.
+
+### `Address already in use` or a different port appears
+
+Open the exact Local URL printed by Streamlit. It may be `http://localhost:8502` or another port instead of `8501`.
+
+### OpenAI API error `429`, `insufficient_quota`, or `credit_balance_exhausted`
+
+This usually indicates that the API account or project has no usable quota or credits, or has reached a billing limit. Check the [OpenAI API billing overview](https://platform.openai.com/settings/organization/billing/overview) and usage limits. ChatGPT subscription access does not automatically provide API credits.
+
+### API key authentication error
+
+Check that the key is valid and belongs to the intended API project or organization. Do not share the key when asking for help.
+
+## Privacy and Responsible Use
+
+- Upload only documents you are authorized to use.
+- Review the privacy and data-handling terms of any external AI service before sending documents.
+- Do not treat model output as financial, investment, legal, or tax advice.
+- Independently verify important conclusions and numerical values against the original source documents.
+
+## Roadmap Ideas
+
+Possible future improvements include:
+
+- More robust source citations and page-level references
+- Support for additional document formats
+- Document-library management and removal
+- Exportable answers and summaries
+- More informative processing status and error messages
+- Configurable themes and interface branding
+- Optional local-model support
+
+These are ideas for future development, not claims that the features are currently implemented.
+
+## Contributing
+
+Suggestions and improvements are welcome. For a change:
+
+1. Create a fork or feature branch.
+2. Make a focused change.
+3. Test the application locally.
+4. Submit a pull request describing the change.
+
+## License
+
+No license is specified here. Add a `LICENSE` file before redistributing the project, and ensure the license is appropriate for the original code and its dependencies.
 
 ---
 
-## Author
+**FinChat** — explore financial documents through natural-language questions.
 
-**Satya Sai Prakash Kantamani** — Data Scientist
-[Portfolio](https://kantamaniprakash.github.io) · [GitHub](https://github.com/kantamaniprakash) · [LinkedIn](https://www.linkedin.com/in/prakash-kantamani) · [Email](mailto:prakashkantamani90@gmail.com)
+Built by **Moh Tarique Siddiqui**.
